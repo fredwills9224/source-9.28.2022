@@ -12,7 +12,10 @@ it('returns 200 OK when signup request is valid', (done)=>{
             password: 'P4ssword'
 
         })
-        .expect(200, done)
+        .then((response)=>{
+            expect(response.status).toBe(200);
+            done();
+        })
     ;
 
 });
