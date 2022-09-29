@@ -1,40 +1,44 @@
 const request = require('supertest');
 const app = require('../app');
 
-it('returns 200 OK when signup request is valid', (done)=>{
+describe('User Registration', ()=>{
 
-    request(app)
-        .post('/api/1.0/users')
-        .send({
-        
-            username: 'user1',
-            email: 'user1@mail.com',
-            password: 'P4ssword'
+    it('returns 200 OK when signup request is valid', (done)=>{
 
-        })
-        .then((response)=>{
-            expect(response.status).toBe(200);
-            done();
-        })
-    ;
-
-});
-
-it('returns success message when signup requst is valid', (done)=>{
-
-    request(app)
-        .post('/api/1.0/users')
-        .send({
-
-            username: 'user1',
-            email:'user1@mail.com',
-            password: 'P4ssword'
-
-        })
-        .then((response)=>{
-            expect(response.body.message).toBe('User created');
-            done();
-        })
-    ;
+        request(app)
+            .post('/api/1.0/users')
+            .send({
+            
+                username: 'user1',
+                email: 'user1@mail.com',
+                password: 'P4ssword'
+    
+            })
+            .then((response)=>{
+                expect(response.status).toBe(200);
+                done();
+            })
+        ;
+    
+    });
+    
+    it('returns success message when signup requst is valid', (done)=>{
+    
+        request(app)
+            .post('/api/1.0/users')
+            .send({
+    
+                username: 'user1',
+                email:'user1@mail.com',
+                password: 'P4ssword'
+    
+            })
+            .then((response)=>{
+                expect(response.body.message).toBe('User created');
+                done();
+            })
+        ;
+    
+    });
 
 });
