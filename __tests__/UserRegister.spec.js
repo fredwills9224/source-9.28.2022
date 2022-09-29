@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('../src/app');
+const User = require('../src/user/User');
 
 describe('User Registration', ()=>{
 
@@ -21,7 +22,6 @@ describe('User Registration', ()=>{
         ;
     
     });
-    
     it('returns success message when signup requst is valid', (done)=>{
     
         request(app)
@@ -40,5 +40,35 @@ describe('User Registration', ()=>{
         ;
     
     });
+    it('saves the user to database', (done)=>{
+
+        request(app)
+            .post('/api/1.0/users')
+            .send({
+                username: 'user1',
+                email: 'user1@mail.com',
+                password: 'P4ssword'
+            })
+            .then(()=>{
+
+                User.findAll().then((userList)=>{
+                    expect(userList.length).toBe(1);
+                    done();
+                });
+                
+            })
+        ;
+
+    });
 
 });
+
+
+
+
+
+
+
+
+
+
