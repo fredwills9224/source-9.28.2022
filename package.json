@@ -4,8 +4,8 @@
   "description": "tdd with express",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app",
-    "test": "jest --watch",
+    "start": "nodemon index",
+    "test": "jest --watch --detectOpenHandles",
     "lint": "eslint ."
   },
   "author": "fred wills",
