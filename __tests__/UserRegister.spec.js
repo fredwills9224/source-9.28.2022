@@ -13,9 +13,9 @@ beforeEach(()=>{
 
 describe('User Registration', ()=>{
 
-    it('returns 200 OK when signup request is valid', (done)=>{
-
-        request(app)
+    const postValidUser = ()=>{
+        
+        return request(app)
             .post('/api/1.0/users')
             .send({
             
@@ -24,6 +24,12 @@ describe('User Registration', ()=>{
                 password: 'P4ssword'
     
             })
+        ;
+
+    };
+    it('returns 200 OK when signup request is valid', (done)=>{
+
+        postValidUser()
             .then((response)=>{
                 expect(response.status).toBe(200);
                 done();
@@ -33,15 +39,7 @@ describe('User Registration', ()=>{
     });
     it('returns success message when signup requst is valid', (done)=>{
     
-        request(app)
-            .post('/api/1.0/users')
-            .send({
-    
-                username: 'user1',
-                email:'user1@mail.com',
-                password: 'P4ssword'
-    
-            })
+        postValidUser()
             .then((response)=>{
                 expect(response.body.message).toBe('User created');
                 done();
@@ -51,13 +49,7 @@ describe('User Registration', ()=>{
     });
     it('saves the user to database', (done)=>{
 
-        request(app)
-            .post('/api/1.0/users')
-            .send({
-                username: 'user1',
-                email: 'user1@mail.com',
-                password: 'P4ssword'
-            })
+        postValidUser()
             .then(()=>{
 
                 User.findAll().then((userList)=>{
@@ -71,13 +63,7 @@ describe('User Registration', ()=>{
     });
     it('saves the username and email to database', (done)=>{
 
-        request(app)
-            .post('/api/1.0/users')
-            .send({
-                username: 'user1',
-                email: 'user1@mail.com',
-                password: 'P4ssword'
-            })
+        postValidUser()
             .then(()=>{
 
                 User.findAll().then((userList)=>{
@@ -93,13 +79,7 @@ describe('User Registration', ()=>{
     });
     it('hashes the password in database', (done)=>{
 
-        request(app)
-            .post('/api/1.0/users')
-            .send({
-                username: 'user1',
-                email: 'user1@mail.com',
-                password: 'P4ssword'
-            })
+        postValidUser()
             .then(()=>{
 
                 User.findAll().then((userList)=>{
