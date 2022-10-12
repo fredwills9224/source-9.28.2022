@@ -1,3 +1,6 @@
 node_modules
 package-lock.json
 database.sqlite
+test.sqlite
+development.json
+test.json
