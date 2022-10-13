@@ -15,8 +15,21 @@ const validateUsername = (req, res, next)=>{
     next();
 
 };
+const validateEmail = (req, res, next)=>{
 
-router.post('/api/1.0/users', validateUsername, async (req, res)=>{
+    const user = req.body;
+    if(user.email === null){
+        return res.status(400).send({
+            validationErrors: {
+                email: 'E-mail cannot be null'
+            }
+        });
+    }
+    next();
+
+};
+
+router.post('/api/1.0/users', validateUsername, validateEmail, async (req, res)=>{
 
     await UserService.save(req.body);
     return res.send({ message: 'User created' });
