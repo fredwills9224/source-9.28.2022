@@ -95,10 +95,11 @@ describe('User Registration', ()=>{
 
     });
     it.each`
-            field         | value   | expectedMessage
-            ${'username'} | ${null} | ${'Username cannot be null'}
-            ${'email'}    | ${null} | ${'E-mail cannot be null'}
-            ${'password'} | ${null} | ${'Password cannot be null'}
+            field         | value    | expectedMessage
+            ${'username'} | ${null}  | ${'Username cannot be null'}
+            ${'username'} | ${'usr'} | ${'Must have min 4 and max 32 characters'}
+            ${'email'}    | ${null}  | ${'E-mail cannot be null'}
+            ${'password'} | ${null}  | ${'Password cannot be null'}
         `('returns $expectedMessage when $field is $value', async ({field, expectedMessage, value})=>{
 
         const user = {
@@ -112,18 +113,18 @@ describe('User Registration', ()=>{
         expect(body.validationErrors[field]).toBe(expectedMessage);
 
     });
-    it('returns size validation error when username is less than 4 characters', async()=>{
+    // it('returns size validation error when username is less than 4 characters', async()=>{
 
-        const user = {
-            username: 'usr',
-            email: 'user1@mail.com',
-            password:'P4ssword'
-        };
-        const response = await postUser(user);
-        const body = response.body;
-        expect(body.validationErrors.username).toBe('Must have min 4 and max 32 characters');
+    //     const user = {
+    //         username: 'usr',
+    //         email: 'user1@mail.com',
+    //         password:'P4ssword'
+    //     };
+    //     const response = await postUser(user);
+    //     const body = response.body;
+    //     expect(body.validationErrors.username).toBe('Must have min 4 and max 32 characters');
 
-    });
+    // });
     
 });
 
