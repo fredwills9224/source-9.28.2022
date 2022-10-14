@@ -36,14 +36,16 @@ router.post('/api/1.0/users',
     check('email').notEmpty(), async (req, res)=>{
 
     const errors = validationResult(req);
-    if(errors){
+    if(!errors.isEmpty()){
 
         // const response = { 
         //     validationErrors: { 
         //         ...req.validationErrors 
         //     } 
         // };
-        return res.status(400).send(errors);
+        const validationErrors = {};
+        errors.array.forEach( error => ( validationErrors[error.param] = error.msg ));
+        return res.status(400).send({ validationErrors: validationErrors });
     
     }
     await UserService.save(req.body);
