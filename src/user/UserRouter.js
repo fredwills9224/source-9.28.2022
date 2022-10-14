@@ -1,45 +1,49 @@
 const express = require('express');
 const UserService = require('./UserService');
 const router = express.Router();
+const {check, validationResult} = require('express-validator');
 
-const validateUsername = (req, res, next)=>{
+// const validateUsername = (req, res, next)=>{
 
-    const user = req.body;
-    if (user.username === null){
+//     const user = req.body;
+//     if (user.username === null){
         
-        req.validationErrors = {
-            username: 'Username cannot be null' 
-        };
+//         req.validationErrors = {
+//             username: 'Username cannot be null' 
+//         };
 
-    }
-    next();
+//     }
+//     next();
 
-};
-const validateEmail = (req, res, next)=>{
+// };
+// const validateEmail = (req, res, next)=>{
 
-    const user = req.body;
-    if(user.email === null){
+//     const user = req.body;
+//     if(user.email === null){
 
-        req.validationErrors = {
-            ...req.validationErrors,
-            email: 'E-mail cannot be null'
-        };
+//         req.validationErrors = {
+//             ...req.validationErrors,
+//             email: 'E-mail cannot be null'
+//         };
 
-    }
-    next();
+//     }
+//     next();
 
-};
+// };
 
-router.post('/api/1.0/users', validateUsername, validateEmail, async (req, res)=>{
+router.post('/api/1.0/users', 
+    check('username').notEmpty(),
+    check('email').notEmpty(), async (req, res)=>{
 
-    if(req.validationErrors){
+    const errors = validationResult(req);
+    if(errors){
 
-        const response = { 
-            validationErrors: { 
-                ...req.validationErrors 
-            } 
-        };
-        return res.status(400).send(response);
+        // const response = { 
+        //     validationErrors: { 
+        //         ...req.validationErrors 
+        //     } 
+        // };
+        return res.status(400).send(errors);
     
     }
     await UserService.save(req.body);
