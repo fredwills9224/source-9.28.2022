@@ -13,7 +13,8 @@ router.post('/api/1.0/users',
             .isEmail().withMessage('E-mail is not valid')
         ,
         check('password')
-            .notEmpty().withMessage('Password cannot be null')
+            .notEmpty().withMessage('Password cannot be null').bail()
+            .isLength({min: 6}).withMessage('Password must be at least 6 characters')
         , 
     async (req, res)=>{
 
