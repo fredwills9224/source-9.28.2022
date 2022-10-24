@@ -1,5 +1,4 @@
 const express = require('express');
-const User = require('./User');
 const UserService = require('./UserService');
 const router = express.Router();
 const {check, validationResult} = require('express-validator');
@@ -14,7 +13,7 @@ router.post('/api/1.0/users',
             .isEmail().withMessage('E-mail is not valid').bail()
             .custom( async (email)=> {
 
-                const user = await User.findOne({ where: { email: email } });
+                const user = await UserService.findByEmail(email);
                 if(user){
                     throw new Error('E-mail in use');
                 }
