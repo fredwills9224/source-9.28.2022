@@ -155,5 +155,58 @@ describe('User Registration', ()=>{
 
 });
 
+describe('Internationalization', ()=>{
 
+    const postUser = (user = validUser)=>{
+        return request(app).post('/api/1.0/users')
+            .set('Accept-Language', 'tr')
+            .send(user)
+        ;
+    };
+    const username_null = 'Kullanici adi bos olamaz';
+    const username_size = 'En az 4 en fazla 32 karakter olmali';
+    const email_null = 'E-Posta bos olamaz';
+    const email_invalid = 'E-Posta gecerli degil';
+    const password_null = 'Sifre bos olamaz';
+    const password_size = 'Sifre en az 6 karakter olmali';
+    const password_pattern = 'Sifrede en az 1 buyuk, 1 kucuk harf ve 1 sayi bulunmalidir';
+    const email_inuse = 'Bu E-Posta kullaniliyor';
+    it.each`
+            field         | value             | expectedMessage
+            ${'username'} | ${null}           | ${username_null}
+            ${'username'} | ${'usr'}          | ${username_size}
+            ${'username'} | ${'a'.repeat(33)} | ${username_size}
+            ${'email'}    | ${null}           | ${email_null}
+            ${'email'}    | ${'mail.com'}     | ${email_invalid}
+            ${'email'}    | ${'user.mail.com'}| ${email_invalid}
+            ${'email'}    | ${'user@mail'}    | ${email_invalid}
+            ${'password'} | ${null}           | ${password_null}
+            ${'password'} | ${'P4ssw'}        | ${password_size}
+            ${'password'} | ${'alllowercase'} | ${password_pattern}
+            ${'password'} | ${'ALLUPPERCASE'} | ${password_pattern}
+            ${'password'} | ${'1234567890'}   | ${password_pattern}
+            ${'password'} | ${'lowerandUPPER'}| ${password_pattern}
+            ${'password'} | ${'lower4nd5678'} | ${password_pattern}
+            ${'password'} | ${'UPPER4444'}    | ${password_pattern}
+        `('returns $expectedMessage when $field is $value when language is set as turkish', async ({field, expectedMessage, value})=>{
 
+        const user = {
+            username: 'user1',
+            email: 'user1@mail.com',
+            password: 'P4ssword'
+        };
+        user[field] = value;
+        const response = await postUser(user);
+        const body = response.body;
+        expect(body.validationErrors[field]).toBe(expectedMessage);
+
+    });
+    it(`returns ${email_inuse} when same email is already in use when language is set as turkish`, async ()=>{
+
+        await User.create({ ...validUser });
+        const response = await postUser();
+        expect(response.body.validationErrors.email).toBe(email_inuse);
+
+    });    
+
+});
